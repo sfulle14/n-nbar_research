@@ -11,7 +11,7 @@ from tkinter.filedialog import *
 
 root = Tk()
 root.title("Neutron Transport")
-root.geometry("300x100")
+root.geometry("300x150")
 
 data = []
 ellipsoid = []
@@ -28,16 +28,6 @@ def open_ellipsoid_file():
     fileName = askopenfilename()
     if fileName is not None:
         ellipsoid = np.load(fileName)
-
-
-data_load = Button(root, text='Load data file', command=open_data_file, height=2, width=15)
-data_load.grid(row=0, column=0)
-
-ellipsoid_load = Button(root, text='Load ellipsoid file', command=open_ellipsoid_file, height=2, width=15)
-ellipsoid_load.grid(row=0, column=1)
-
-run = Button(root, text='Run', command=lambda : simulation(data, ellipsoid), height=2, width=7)
-run.grid(row=1, column=0)
 
 def simulation(data, ellipsoid):
     #constants
@@ -257,5 +247,18 @@ def simulation(data, ellipsoid):
             unreflected_sensitivity = 0
             reflected_sensitivity = 0
 
+
+data_load = Button(root, text='Load data file', command=open_data_file, height=2, width=15)
+data_load.grid(row=1, column=0)
+
+ellipsoid_load = Button(root, text='Load ellipsoid file', command=open_ellipsoid_file, height=2, width=15)
+ellipsoid_load.grid(row=1, column=1)
+
+run = Button(root, text='Run', command=lambda : simulation(data, ellipsoid), height=2, width=7)
+run.grid(row=2, column=0)
+
+text = Text(root,height=2, width=30)
+text.insert(END, "Files must be of .npy format!")
+text.grid(columnspan=2, row=0)
 
 root.mainloop()
