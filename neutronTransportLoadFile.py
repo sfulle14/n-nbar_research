@@ -24,7 +24,7 @@ g = 9.81
 total_distance = 53.0
 
 #Slices
-slice_distance = 0.5 #want to get down to 0.01
+slice_distance = 0.05 #want to get down to 0.01
 total_slices = int((1/2) * (1/slice_distance) * total_distance + 1)
 
 #counters
@@ -48,10 +48,12 @@ R = 1
 #genertates array or arrays with data
 data =[]
 data = open_file()
+data = data[:num_of_neutrons]
 print("data loaded") 
 
 ellipsoid =[]
 ellipsoid = open_file()
+ellipsoid = ellipsoid[:num_of_ellipse]
 print("ellipsoids loaded")
 
 print("create file")
@@ -66,7 +68,7 @@ with open("reflected_file.txt", "w+") as f:
     for i in range(num_of_ellipse):
 
         for j,neutron in enumerate(data):   #total lines 7856990
-            if(j%10000==0):
+            if(j%100_000==0):
                 print("The value of the iterator is j = ", j, "\n")
 
             #Normalizes the flux to 1 MW operating power
@@ -190,7 +192,7 @@ with open("reflected_file.txt", "w+") as f:
                             final_wavelength = 3956 / total_final_velocity
 
                     #if neutrons have reached the end of the beam line
-                    if(z_final_position == total_distance):
+                    if(z_final_position >= total_distance -0.01 or z_final_position <= total_distance + 0.01):
                         if(x_final_position**2 + y_final_position**2 <= 0.0625):
                             detector_incident_reflected += weight
                             #calculate the n-nbar sensitivity
@@ -201,7 +203,7 @@ with open("reflected_file.txt", "w+") as f:
                             pass 
                         
             #print out data to file
-            output = (j,  ellipsoid[i,2], ellipsoid[i,0], reflect, bounce,
+            output = (j,  ellipsoid[i][2], ellipsoid[i][0], reflect, bounce,
                 x_bounces, y_bounces, z_bounces,
                 weight, neutron[1], neutron[2], neutron[3], 
                 neutron[4], neutron[5], neutron[6],
@@ -219,7 +221,7 @@ with open("reflected_file.txt", "w+") as f:
             y_bounces = 0
             z_bounces = 0
 
-        print("The ellipsoid configuration is (a,b,c,f) = (", ellipsoid[i,0], ", ", ellipsoid[i,1], ", ", ellipsoid[i,2], ", ", ellipsoid[i,3], ")\n")
+        print("The ellipsoid configuration is (a,b,c,f) = (", ellipsoid[i][0], ", ", ellipsoid[i][1], ", ", ellipsoid[i][2], ", ", ellipsoid[i][3], ")\n")
         print("The FINAL TOTAL value of the INCIDENT flux is: ", incident_neutrons, "n/s \n")
         print("The pre-value of the UNREFLECTED detector flux is: ", detector_incident_unreflected, "n/s \n")
         print("The FINAL TOTAL value of the UNREFLECTED+REFLECTED detector flux is: ", detector_incident_reflected + detector_incident_unreflected, "n/s \n")
