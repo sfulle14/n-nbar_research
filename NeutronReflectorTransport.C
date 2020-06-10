@@ -1,7 +1,3 @@
-/*
-By Steven Fuller
-*/
-
 #include <cmath>
 #include <math.h>
 #include <stdio.h>
