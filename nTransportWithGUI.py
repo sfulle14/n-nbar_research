@@ -1,4 +1,4 @@
-#Steven Fuller
+# Steven Fuller
 # June 9, 2020
 
 import matplotlib
@@ -11,7 +11,7 @@ from tkinter.filedialog import *
 
 root = Tk()
 root.title("Neutron Transport")
-root.geometry("300x150")
+root.geometry("410x150")
 
 data = []
 ellipsoid = []
@@ -32,7 +32,7 @@ def open_ellipsoid_file():
 def simulation(data, ellipsoid):
     #constants
     num_of_ellipse = 3
-    num_of_neutrons = 1000
+    num_of_neutrons = 100_000
     g = 9.81
     total_distance = 53.0
 
@@ -58,19 +58,11 @@ def simulation(data, ellipsoid):
     Z_0 = 0.5 * total_distance
     R = 1
 
-    #genertates array or arrays with data
-    #data =[]
-    #data = open_data_file()
+    #limits the length of the arrays 
     data = data[:num_of_neutrons]
-    print("data loaded") 
 
-    #ellipsoid =[]
-    #ellipsoid = open_ellipsoid_file()
     ellipsoid = ellipsoid[:num_of_ellipse]
-    print("ellipsoids loaded")
 
-    print("create file")
-    #Open the text file and erase it then close it
     #using with open closes the file even if there is an error
     with open("reflected_file.txt", "w+") as f:
         f.write("j, c, a, reflect, bounce, (x,y,z) bounces, weight, weight, initial (x,y,z) position") 
@@ -80,9 +72,8 @@ def simulation(data, ellipsoid):
         print("start loops")
         for i in range(num_of_ellipse):
 
+            last_update = 0
             for j,neutron in enumerate(data):   #total lines 7856990
-                if(j%100_000==0):
-                    print("The value of the iterator is j = ", j, "\n")
 
                 #Normalizes the flux to 1 MW operating power
                 weight = neutron[0]/5
@@ -234,6 +225,12 @@ def simulation(data, ellipsoid):
                 y_bounces = 0
                 z_bounces = 0
 
+                value = (j+1) / num_of_neutrons * 100
+                if value - last_update >= 10:
+                    last_update = value
+                    neutron_progress['value'] = value
+                    root.update()
+
             print("The ellipsoid configuration is (a,b,c,f) = (", ellipsoid[i][0], ", ", ellipsoid[i][1], ", ", ellipsoid[i][2], ", ", ellipsoid[i][3], ")\n")
             print("The FINAL TOTAL value of the INCIDENT flux is: ", incident_neutrons, "n/s \n")
             print("The pre-value of the UNREFLECTED detector flux is: ", detector_incident_unreflected, "n/s \n")
@@ -246,7 +243,19 @@ def simulation(data, ellipsoid):
             detector_incident_unreflected = 0
             unreflected_sensitivity = 0
             reflected_sensitivity = 0
+            
+            value = (i+1) / num_of_ellipse * 100
+            ellipsoid_progress['value'] = value
+            root.update()   
 
+text = Text(root,height=2, width=30)
+text.insert(END, "Files must be of .npy format!")
+text.grid(columnspan=3, row=0)
+
+neutron_progress = Progressbar(root, orient=HORIZONTAL, length=250, mode='determinate')
+neutron_progress.grid(column=1, row = 3, columnspan=2)
+ellipsoid_progress = Progressbar(root, orient=HORIZONTAL, length=250, mode='determinate')
+ellipsoid_progress.grid(column=1, row = 4, columnspan=2)
 
 data_load = Button(root, text='Load data file', command=open_data_file, height=2, width=15)
 data_load.grid(row=1, column=0)
@@ -255,10 +264,14 @@ ellipsoid_load = Button(root, text='Load ellipsoid file', command=open_ellipsoid
 ellipsoid_load.grid(row=1, column=1)
 
 run = Button(root, text='Run', command=lambda : simulation(data, ellipsoid), height=2, width=7)
-run.grid(row=2, column=0)
+run.grid(row=1, column=2)
 
-text = Text(root,height=2, width=30)
-text.insert(END, "Files must be of .npy format!")
-text.grid(columnspan=2, row=0)
+text2 = Text(root,height=2, width=20)
+text2.insert(END, "Neutron Progress: ")
+text2.grid(column=0, row=3)
+
+text3 = Text(root,height=2, width=20)
+text3.insert(END, "Ellipsoid Progress: ")
+text3.grid(column=0, row=4)
 
 root.mainloop()
