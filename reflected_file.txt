@@ -1,0 +1,1 @@
+j, c, a, reflect, bounce, (x,y,z) bounces, weight, weight, initial (x,y,z) positioninitial (x,y,z) velocity, initial wavelength, total initial velocity, final wavelengthtotal final velocity, final (x,y,z) velocity, fianl (x,y,z) position 

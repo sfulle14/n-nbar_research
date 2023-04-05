@@ -260,13 +260,16 @@ neutron_progress.grid(column=1, row = 3, columnspan=2)
 ellipsoid_progress = Progressbar(root, orient=HORIZONTAL, length=250, mode='determinate')
 ellipsoid_progress.grid(column=1, row = 4, columnspan=2)
 
-data_load = Button(root, text='Load data file', command=open_data_file, height=2, width=15)
+#data_load = Button(root, text='Load data file', command=open_data_file, height=2, width=15)
+data_load = Button(root, text='Load data file', command=open_data_file, width=15)
 data_load.grid(row=1, column=0)
 
-ellipsoid_load = Button(root, text='Load ellipsoid file', command=open_ellipsoid_file, height=2, width=15)
+#ellipsoid_load = Button(root, text='Load ellipsoid file', command=open_ellipsoid_file, height=2, width=15)
+ellipsoid_load = Button(root, text='Load ellipsoid file', command=open_ellipsoid_file, width=15)
 ellipsoid_load.grid(row=1, column=1)
 
-run = Button(root, text='Run', command=lambda : simulation(data, ellipsoid), height=2, width=7)
+#run = Button(root, text='Run', command=lambda : simulation(data, ellipsoid), height=2, width=7)
+run = Button(root, text='Run', command=lambda : simulation(data, ellipsoid), width=7)
 run.grid(row=1, column=2)
 
 text2 = Text(root,height=2, width=20)
